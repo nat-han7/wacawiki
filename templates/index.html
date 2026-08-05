@@ -11,39 +11,34 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-        padding: 4rem 1.5rem;
+        padding: 3rem 1.5rem;
         background: radial-gradient(circle at center, rgba(37, 211, 102, 0.08) 0%, transparent 70%);
         border: 1px solid var(--border-subtle);
         border-radius: var(--radius-md);
-        margin-top: 1rem;
-    }
-
-    .milestone-badge {
-        background: rgba(37, 211, 102, 0.15);
-        color: #25D366;
-        border: 1px solid #25D366;
-        padding: 6px 16px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        margin-bottom: 1.5rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
+        margin-top: 0.5rem;
     }
 
     .hero-title {
-        font-size: 2.8rem;
+        font-size: clamp(1.8rem, 5vw, 2.8rem);
         color: var(--accent-gold);
         margin-bottom: 1rem;
         text-shadow: 0 0 20px rgba(229, 169, 60, 0.2);
+        line-height: 1.2;
     }
 
     .hero-text {
         color: var(--text-muted);
-        font-size: 1.1rem;
-        max-width: 650px;
+        font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+        max-width: 680px;
         margin-bottom: 2rem;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.7;
+    }
+
+    .hero-text a {
+        display: inline-block;
+        margin-left: 4px;
     }
 
     /* WhatsApp Button Styles */
@@ -51,44 +46,46 @@
         background-color: #25D366;
         color: #ffffff;
         font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         font-weight: 700;
-        padding: 0.9rem 2rem;
+        padding: 0.85rem 2rem;
         border-radius: 50px;
         border: none;
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 12px;
         box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
         transition: all 0.3s ease;
+        touch-action: manipulation;
     }
 
     .btn-whatsapp:hover {
         background-color: #20ba5a;
         color: #ffffff;
-        transform: translateY(-3px) scale(1.02);
+        transform: translateY(-2px) scale(1.02);
         box-shadow: 0 6px 25px rgba(37, 211, 102, 0.5);
     }
 
     .btn-whatsapp i {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
     }
 
     /* Floating Plus-Button Container */
     .floating-wa-btn {
         position: fixed;
-        bottom: 30px;
-        right: 30px;
-        width: 60px;
-        height: 60px;
+        bottom: 24px;
+        right: 24px;
+        width: 56px;
+        height: 56px;
         border-radius: 50%;
         background-color: #25D366;
         color: white;
         display: flex;
         justify-content: center;
         align-items: center;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        font-size: 1.6rem;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+        font-size: 1.5rem;
         z-index: 999;
         transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         text-decoration: none;
@@ -109,20 +106,40 @@
         transform: scale(0.3) rotate(-90deg);
     }
 
-    .floating-wa-btn:hover {
+    .floating-wa-btn:hover, .floating-wa-btn:active {
         background-color: #20ba5a;
-        transform: scale(1.1);
-        box-shadow: 0 0 20px rgba(37, 211, 102, 0.6);
+        transform: scale(1.08);
+        box-shadow: 0 0 22px rgba(37, 211, 102, 0.6);
     }
 
-    .floating-wa-btn:hover .icon-wa {
+    .floating-wa-btn:hover .icon-wa, .floating-wa-btn:active .icon-wa {
         opacity: 0;
         transform: scale(0.3) rotate(90deg);
     }
 
-    .floating-wa-btn:hover .icon-plus {
+    .floating-wa-btn:hover .icon-plus, .floating-wa-btn:active .icon-plus {
         opacity: 1;
         transform: scale(1) rotate(0deg);
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 2rem 1rem;
+        }
+
+        .btn-whatsapp {
+            width: 100%;
+            padding: 0.85rem 1.2rem;
+            font-size: 1rem;
+        }
+
+        .floating-wa-btn {
+            bottom: 16px;
+            right: 16px;
+            width: 50px;
+            height: 50px;
+            font-size: 1.3rem;
+        }
     }
 </style>
 {% endblock %}
@@ -138,7 +155,7 @@
 • - - • ᯽ • - - • ᯽ • - - •
 ⁺₊⋆𝐀𝐡𝐡 𝐝𝐮 ᗯᗴᒪTՏᑕᕼÖᑎᕼᗴIT, 𝐰𝐚𝐬 𝐟𝐮̈𝐡𝐫𝐭 𝐝𝐢𝐜𝐡 𝐳𝐮 𝐦𝐢𝐫 ??‧.💕💭
 ᵉᵍᵃˡ ᵒᵇ ᵈᵘ ᵉⁱⁿ|𝐊𝐫𝐢𝐞𝐠𝐞𝐫🫶, ʰᵉⁱˡᵉʳ👑, 𝙹𝚞𝚗𝚐𝚎𝚜, ᴀ̈ʟᴛᴇsᴛᴇʀ, ˢᵗʳᵉᵘⁿᵉʳ/₊‧⋆. ᕼᗩᑌՏKᗩ̈Tᘔᑕᕼᗴᑎ, ᵏᵒⁿⁱᵍⁱⁿ•˚₊, ᵃⁿᶠᵘʰʳᵉʳ, ❣️︎𝘻𝘸𝘦𝘪𝘵𝘦𝘳 ᵃⁿᶠⁱ☀️, ᵒᵈᵃ ᵉⁱᶠ ⁿᵘʳ ᵉⁱⁿ‧.°🫧ᗯᗩᑕᗩ☀️︎︎ᶠᵃⁿ ᵇⁱˢᵗ:
-˚₊‧ «𝗗𝗨 𝗕𝗜𝗦𝗧 𝗛𝗜𝗘𝗥 𝗛𝗘𝗥𝗭𝗟𝗜𝗖𝗛 𝗪𝗜𝗟𝗞𝗢𝗠𝗠𝗘𝗡»⁺₊🫰💞<a style="color: green;" href="https://whatsapp.com/channel/0029Vb5kWJuICVfiAASGZt1M" target="_blank"><strong>Mehr lesen</strong></a>
+˚₊‧ «𝗗𝗨 𝗕𝗜𝗦𝗧 𝗛𝗜𝗘𝗥 𝗛𝗘𝗥𝗭𝗟𝗜𝗖𝗛 𝗪𝗜𝗟𝗞𝗢𝗠𝗠𝗘𝗡»⁺₊🫰💞<a style="color: #25D366; font-weight: bold;" href="https://whatsapp.com/channel/0029Vb5kWJuICVfiAASGZt1M" target="_blank"><strong>Mehr lesen</strong></a>
     </p>
 
     <!-- WhatsApp Channel Link -->

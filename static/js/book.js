@@ -27,39 +27,46 @@ class WacaBook extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <style>
                 :host {
-                    display: inline-block;
-                    margin: 10px;
+                    display: block;
+                    width: 100%;
+                    margin: 0;
+                }
+
+                *, *::before, *::after {
+                    box-sizing: border-box;
                 }
 
                 .book-card {
                     display: flex;
                     flex-direction: column;
-                    width: 180px;
+                    width: 100%;
+                    height: 100%;
                     background: #18221e;
                     border: 1px solid rgba(229, 169, 60, 0.2);
                     border-radius: 12px;
-                    padding: 12px;
+                    padding: 10px;
                     text-decoration: none;
                     color: #e2e8e5;
-                    transition: all 0.3s ease;
+                    transition: all 0.25s ease;
                     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
                     position: relative;
                     overflow: hidden;
                 }
 
-                .book-card:not(.skeleton):hover {
-                    transform: translateY(-5px);
+                .book-card:not(.skeleton):hover, 
+                .book-card:not(.skeleton):active {
+                    transform: translateY(-4px);
                     border-color: rgba(229, 169, 60, 0.6);
-                    box-shadow: 0 0 20px rgba(229, 169, 60, 0.2), 0 8px 25px rgba(0, 0, 0, 0.6);
+                    box-shadow: 0 0 20px rgba(229, 169, 60, 0.25), 0 8px 25px rgba(0, 0, 0, 0.6);
                 }
 
                 .cover-wrapper {
                     position: relative;
                     width: 100%;
-                    height: 240px;
+                    aspect-ratio: 2 / 3;
                     border-radius: 8px;
                     overflow: hidden;
-                    margin-bottom: 10px;
+                    margin-bottom: 8px;
                     background: #0f1412;
                 }
 
@@ -67,6 +74,7 @@ class WacaBook extends HTMLElement {
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
+                    display: block;
                 }
 
                 .cover-wrapper::before {
@@ -74,7 +82,7 @@ class WacaBook extends HTMLElement {
                     position: absolute;
                     top: 0;
                     left: 0;
-                    width: 8px;
+                    width: 6px;
                     height: 100%;
                     background: linear-gradient(to right, rgba(0,0,0,0.5), transparent);
                     z-index: 1;
@@ -83,25 +91,32 @@ class WacaBook extends HTMLElement {
                 .book-info {
                     display: flex;
                     flex-direction: column;
-                    gap: 6px;
+                    gap: 4px;
+                    flex-grow: 1;
                 }
 
                 .book-title {
                     font-family: 'Cinzel', serif, sans-serif;
-                    font-size: 0.95rem;
+                    font-size: clamp(0.85rem, 2vw, 0.95rem);
                     font-weight: 700;
                     color: #ffffff;
                     margin: 0;
-                    line-height: 1.2;
+                    line-height: 1.25;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
                     overflow: hidden;
                     text-overflow: ellipsis;
-                    white-space: nowrap;
                 }
 
                 .book-author {
                     font-family: 'Plus Jakarta Sans', sans-serif;
                     font-size: 0.75rem;
                     color: #9ab0a6;
+                    margin-top: auto;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
 
                 /* --- SKELETON STYLES & ANIMATION --- */
@@ -139,11 +154,13 @@ class WacaBook extends HTMLElement {
                 .skeleton-title {
                     height: 14px;
                     width: 85%;
+                    margin-top: 4px;
                 }
 
                 .skeleton-author {
                     height: 10px;
                     width: 60%;
+                    margin-top: 4px;
                 }
             </style>
 
@@ -156,9 +173,9 @@ class WacaBook extends HTMLElement {
                     </div>
                 </div>
             ` : `
-                <a href="${href}" target="_blank" class="book-card">
+                <a href="${href}" class="book-card">
                     <div class="cover-wrapper">
-                        <img class="cover-img" src="${thumbnail}" alt="${title}">
+                        <img class="cover-img" src="${thumbnail}" alt="${title}" loading="lazy">
                     </div>
                     <div class="book-info">
                         <h4 class="book-title">${title}</h4>

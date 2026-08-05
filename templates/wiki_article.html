@@ -8,7 +8,7 @@
     .article-container {
         max-width: 860px; /* Optimale Zeilenlänge für gute Lesbarkeit */
         margin: 1.5rem auto 3rem auto;
-        padding: 2.5rem 3rem;
+        padding: 2.2rem 2.5rem;
         background: var(--bg-card);
         border: 1px solid var(--border-subtle);
         border-radius: var(--radius-md);
@@ -17,7 +17,7 @@
 
     /* Zurück-Button / Breadcrumb */
     .article-nav {
-        margin-bottom: 2rem;
+        margin-bottom: 1.8rem;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -28,9 +28,10 @@
         align-items: center;
         gap: 8px;
         color: var(--text-muted);
-        font-size: 0.9rem;
+        font-size: 0.92rem;
         font-weight: 500;
         transition: color 0.2s ease;
+        padding: 4px 0;
     }
 
     .back-link:hover {
@@ -42,11 +43,13 @@
         color: var(--text-main);
         font-size: 1.05rem;
         line-height: 1.8;
+        word-break: break-word;
+        overflow-wrap: break-word;
     }
 
     /* Überschriften-Hierarchie */
     .wiki-content h1 {
-        font-size: 2.2rem;
+        font-size: clamp(1.6rem, 4vw, 2.2rem);
         color: var(--accent-gold);
         margin-bottom: 1.2rem;
         padding-bottom: 0.5rem;
@@ -54,16 +57,16 @@
     }
 
     .wiki-content h2 {
-        font-size: 1.6rem;
+        font-size: clamp(1.3rem, 3vw, 1.6rem);
         color: var(--text-light);
-        margin-top: 2rem;
+        margin-top: 1.8rem;
         margin-bottom: 0.8rem;
     }
 
     .wiki-content h3 {
-        font-size: 1.25rem;
+        font-size: clamp(1.1rem, 2.5vw, 1.25rem);
         color: var(--accent-gold);
-        margin-top: 1.5rem;
+        margin-top: 1.4rem;
         margin-bottom: 0.5rem;
     }
 
@@ -80,11 +83,11 @@
     /* Listen für Rollen/Eigenschaften */
     .wiki-content ul, .wiki-content ol {
         margin-bottom: 1.5rem;
-        padding-left: 1.5rem;
+        padding-left: 1.25rem;
     }
 
     .wiki-content li {
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.4rem;
     }
 
     .wiki-content li::marker {
@@ -95,8 +98,8 @@
     .wiki-content blockquote {
         background: rgba(229, 169, 60, 0.05);
         border-left: 4px solid var(--accent-gold);
-        padding: 1rem 1.25rem;
-        margin: 1.5rem 0;
+        padding: 0.8rem 1.1rem;
+        margin: 1.25rem 0;
         border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
         font-style: italic;
         color: var(--text-muted);
@@ -107,18 +110,20 @@
         max-width: 100%;
         height: auto;
         border-radius: var(--radius-sm);
-        margin: 1.5rem 0;
+        margin: 1.25rem 0;
         border: 1px solid var(--border-subtle);
     }
 
-    /* Tabellen (z.B. für Stammdaten der Katzen/Clans) */
+    /* Tabellen (z.B. für Stammdaten der Katzen/Clans) - Responsive Scroll */
     .wiki-content table {
+        display: block;
         width: 100%;
+        overflow-x: auto;
         border-collapse: collapse;
         margin: 1.5rem 0;
-        background: rgba(0, 0, 0, 0.2);
+        background: rgba(0, 0, 0, 0.25);
         border-radius: var(--radius-sm);
-        overflow: hidden;
+        white-space: nowrap;
     }
 
     .wiki-content th, .wiki-content td {
@@ -131,7 +136,7 @@
         background: rgba(229, 169, 60, 0.1);
         color: var(--accent-gold);
         font-family: 'Cinzel', serif;
-        font-size: 0.9rem;
+        font-size: 0.88rem;
     }
 
     .wiki-content tr:last-child td {
@@ -141,19 +146,21 @@
     /* Mobile Anpassung */
     @media (max-width: 768px) {
         .article-container {
-            padding: 1.5rem;
-            margin-top: 1rem;
+            padding: 1.25rem 1rem;
+            margin: 0.8rem auto 2rem auto;
+            border-radius: var(--radius-sm);
         }
-        
-        .wiki-content h1 {
-            font-size: 1.75rem;
+
+        .wiki-content {
+            font-size: 0.98rem;
+            line-height: 1.7;
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-{%if not error%}
+{% if not error %}
 <article class="article-container">
     <!-- Breadcrumb Nav -->
     <nav class="article-nav">
@@ -169,6 +176,8 @@
     </div>
 </article>
 {% else %}
-{{ content_md | safe }}
-{% endif%}
+<div class="article-container">
+    {{ content_md | safe }}
+</div>
+{% endif %}
 {% endblock %}

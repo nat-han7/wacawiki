@@ -12,7 +12,7 @@
     .editor-container {
         max-width: 1400px;
         margin: 1.5rem auto 3rem auto;
-        padding: 0 1rem;
+        padding: 0 0.5rem;
     }
 
     /* Split-Screen Grid Layout */
@@ -29,7 +29,7 @@
         border: 1px solid var(--border-subtle);
         border-radius: var(--radius-md);
         box-shadow: var(--shadow-card);
-        padding: 2rem;
+        padding: 1.5rem;
         min-height: 600px;
         display: flex;
         flex-direction: column;
@@ -37,14 +37,16 @@
 
     .editor-header {
         font-family: 'Cinzel', serif;
-        font-size: 1.2rem;
+        font-size: 1.15rem;
         color: var(--accent-gold);
         margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
+        padding-bottom: 0.6rem;
         border-bottom: 1px solid var(--border-subtle);
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
     }
 
     /* Input & Textarea Styling */
@@ -55,43 +57,51 @@
     .title-input {
         width: 100%;
         padding: 0.75rem 1rem;
-        background: rgba(0, 0, 0, 0.2);
+        background: rgba(0, 0, 0, 0.25);
         border: 1px solid var(--border-subtle);
         border-radius: var(--radius-sm);
         color: var(--text-light);
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         margin-bottom: 1rem;
         outline: none;
+        min-height: 44px;
     }
 
     .title-input:focus {
         border-color: var(--accent-gold);
     }
 
-    /* Snippet Toolbar Styling */
+    /* Snippet Toolbar Styling - Horizontal scrollbar on small screens */
     .editor-toolbar {
         display: flex;
         flex-wrap: wrap;
         gap: 0.4rem;
         background: rgba(0, 0, 0, 0.3);
-        padding: 0.5rem;
+        padding: 0.6rem;
         border: 1px solid var(--border-subtle);
         border-bottom: none;
         border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .toolbar-btn {
         background: transparent;
         border: 1px solid transparent;
         color: var(--text-main);
-        padding: 0.35rem 0.6rem;
+        padding: 0.4rem 0.7rem;
         border-radius: var(--radius-sm);
         cursor: pointer;
         font-size: 0.85rem;
         transition: background 0.2s, border-color 0.2s;
+        white-space: nowrap;
+        min-height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .toolbar-btn:hover {
+    .toolbar-btn:hover, .toolbar-btn:active {
         background: rgba(229, 169, 60, 0.15);
         border-color: var(--accent-gold);
         color: var(--accent-gold);
@@ -100,8 +110,8 @@
     .markdown-textarea {
         width: 100%;
         flex-grow: 1;
-        min-height: 450px;
-        background: rgba(0, 0, 0, 0.2);
+        min-height: 420px;
+        background: rgba(0, 0, 0, 0.25);
         border: 1px solid var(--border-subtle);
         border-radius: 0 0 var(--radius-sm) var(--radius-sm);
         color: var(--text-main);
@@ -120,13 +130,14 @@
     /* Wiki Style Preview */
     .wiki-content {
         color: var(--text-main);
-        font-size: 1.05rem;
-        line-height: 1.8;
+        font-size: 1rem;
+        line-height: 1.75;
         word-break: break-word;
+        overflow-wrap: break-word;
     }
 
     .wiki-content h1 {
-        font-size: 2.2rem;
+        font-size: clamp(1.6rem, 4vw, 2.2rem);
         color: var(--accent-gold);
         margin-bottom: 1.2rem;
         padding-bottom: 0.5rem;
@@ -134,30 +145,30 @@
     }
 
     .wiki-content h2 {
-        font-size: 1.6rem;
+        font-size: clamp(1.3rem, 3vw, 1.6rem);
         color: var(--text-light);
-        margin-top: 2rem;
+        margin-top: 1.8rem;
         margin-bottom: 0.8rem;
     }
 
     .wiki-content h3 {
-        font-size: 1.25rem;
+        font-size: clamp(1.1rem, 2.5vw, 1.25rem);
         color: var(--accent-gold);
-        margin-top: 1.5rem;
+        margin-top: 1.4rem;
         margin-bottom: 0.5rem;
     }
 
-    .wiki-content p { margin-bottom: 1.25rem; }
+    .wiki-content p { margin-bottom: 1.2rem; }
     .wiki-content strong { color: var(--text-light); font-weight: 600; }
-    .wiki-content ul, .wiki-content ol { margin-bottom: 1.5rem; padding-left: 1.5rem; }
-    .wiki-content li { margin-bottom: 0.5rem; }
+    .wiki-content ul, .wiki-content ol { margin-bottom: 1.5rem; padding-left: 1.25rem; }
+    .wiki-content li { margin-bottom: 0.4rem; }
     .wiki-content li::marker { color: var(--accent-gold); }
 
     .wiki-content blockquote {
         background: rgba(229, 169, 60, 0.05);
         border-left: 4px solid var(--accent-gold);
-        padding: 1rem 1.25rem;
-        margin: 1.5rem 0;
+        padding: 0.8rem 1rem;
+        margin: 1.25rem 0;
         border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
         font-style: italic;
         color: var(--text-muted);
@@ -167,21 +178,24 @@
         max-width: 100%;
         height: auto;
         border-radius: var(--radius-sm);
-        margin: 1.5rem 0;
+        margin: 1.25rem 0;
         border: 1px solid var(--border-subtle);
     }
 
+    /* Table Mobile Fix */
     .wiki-content table {
+        display: block;
         width: 100%;
+        overflow-x: auto;
         border-collapse: collapse;
-        margin: 1.5rem 0;
-        background: rgba(0, 0, 0, 0.2);
+        margin: 1.25rem 0;
+        background: rgba(0, 0, 0, 0.25);
         border-radius: var(--radius-sm);
-        overflow: hidden;
+        white-space: nowrap;
     }
 
     .wiki-content th, .wiki-content td {
-        padding: 0.75rem 1rem;
+        padding: 0.7rem 0.9rem;
         text-align: left;
         border-bottom: 1px solid var(--border-subtle);
     }
@@ -190,19 +204,20 @@
         background: rgba(229, 169, 60, 0.1);
         color: var(--accent-gold);
         font-family: 'Cinzel', serif;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
     
     .book-select {
         width: 100%;
         padding: 0.75rem 1rem;
-        background: rgba(0, 0, 0, 0.2);
+        background: rgba(0, 0, 0, 0.25);
         border: 1px solid var(--border-subtle);
         border-radius: var(--radius-sm);
         color: var(--text-light);
-        font-size: 1rem;
+        font-size: 0.95rem;
         margin-bottom: 1rem;
         outline: none;
+        min-height: 44px;
     }
 
     .book-select:focus {
@@ -218,6 +233,15 @@
         .editor-grid {
             grid-template-columns: 1fr;
         }
+
+        .editor-box, .preview-box {
+            padding: 1.1rem;
+            min-height: auto;
+        }
+
+        .markdown-textarea {
+            min-height: 280px;
+        }
     }
 </style>
 {% endblock %}
@@ -231,14 +255,14 @@
             <div class="editor-box">
                 <div class="editor-header">
                     <span><i class="fa-solid fa-pen-to-square"></i> Editor</span>
-                    <button type="submit" class="btn btn-primary" style="font-size: 0.75rem; padding: 0.4rem 0.9rem;">
+                    <button type="submit" class="btn btn-primary" style="font-size: 0.8rem; padding: 0.5rem 1rem;">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Veröffentlichen
                     </button>
                 </div>
 
                 <!-- 1. Buchauswahl-Dropdown -->
                 <div class="form-group">
-                    <label for="book-select" style="display: block; color: var(--accent-gold); margin-bottom: 0.4rem; font-size: 0.9rem;">
+                    <label for="book-select" style="display: block; color: var(--accent-gold); margin-bottom: 0.4rem; font-size: 0.88rem; font-weight: 500;">
                         <i class="fa-solid fa-book"></i> Buch verknüpfen:
                     </label>
                     {% if available_books %}
@@ -251,8 +275,8 @@
                             {% endfor %}
                         </select>
                     {% else %}
-                        <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
-                            Keine unlinked Bücher verfügbar. Alle Bücher haben bereits einen Wiki-Eintrag!
+                        <div style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1rem;">
+                            Keine verknüpfbaren Bücher verfügbar. Alle Bücher haben bereits einen Wiki-Eintrag!
                         </div>
                     {% endif %}
                 </div>
@@ -358,32 +382,44 @@
                 selectionOffsetEnd += selectedText ? 1 : 14;
                 break;
             case 'h2':
-                replacement = `\n## ${selectedText || 'Überschrift 2'}\n`;
+                replacement = `
+## ${selectedText || 'Überschrift 2'}
+`;
                 selectionOffsetStart += 4;
                 selectionOffsetEnd += selectedText ? 4 : 17;
                 break;
             case 'h3':
-                replacement = `\n### ${selectedText || 'Überschrift 3'}\n`;
+                replacement = `
+### ${selectedText || 'Überschrift 3'}
+`;
                 selectionOffsetStart += 5;
                 selectionOffsetEnd += selectedText ? 5 : 18;
                 break;
             case 'ul':
-                replacement = `\n- ${selectedText || 'Listenpunkt'}`;
+                replacement = `
+- ${selectedText || 'Listenpunkt'}`;
                 selectionOffsetStart += 3;
                 selectionOffsetEnd += selectedText ? 3 : 14;
                 break;
             case 'ol':
-                replacement = `\n1. ${selectedText || 'Erster Punkt'}`;
+                replacement = `
+1. ${selectedText || 'Erster Punkt'}`;
                 selectionOffsetStart += 4;
                 selectionOffsetEnd += selectedText ? 4 : 16;
                 break;
             case 'quote':
-                replacement = `\n> ${selectedText || 'Zitat text'}\n`;
+                replacement = `
+> ${selectedText || 'Zitat text'}
+`;
                 selectionOffsetStart += 3;
                 selectionOffsetEnd += selectedText ? 3 : 13;
                 break;
             case 'code':
-                replacement = `\n\`\`\`javascript\n${selectedText || '// Code hier'}\n\`\`\`\n`;
+                replacement = `
+\`\`\`javascript
+${selectedText || '// Code hier'}
+\`\`\`
+`;
                 selectionOffsetStart += 15;
                 selectionOffsetEnd += selectedText ? 15 : 27;
                 break;
@@ -393,7 +429,11 @@
                 selectionOffsetEnd += selectedText ? 1 : 10;
                 break;
             case 'table':
-                replacement = `\n| Spalte 1 | Spalte 2 |\n| --- | --- |\n| Wert 1 | Wert 2 |\n`;
+                replacement = `
+| Spalte 1 | Spalte 2 |
+| --- | --- |
+| Wert 1 | Wert 2 |
+`;
                 selectionOffsetStart = start + replacement.length;
                 selectionOffsetEnd = selectionOffsetStart;
                 break;
@@ -411,28 +451,24 @@
        2. Tastenkürzel & Autovervollständigung
        ========================================== */
     markdownInput.addEventListener('keydown', function(e) {
-        // Strg+B / Cmd+B (Fett)
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
             e.preventDefault();
             insertSnippet('bold');
             return;
         }
 
-        // Strg+I / Cmd+I (Kursiv)
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'i') {
             e.preventDefault();
             insertSnippet('italic');
             return;
         }
 
-        // Strg+S / Cmd+S Abfangen -> Artikel speichern/veröffentlichen
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
             e.preventDefault();
             markdownInput.form.requestSubmit();
             return;
         }
 
-        // Tab-Taste Unterstützung für Einrückungen
         if (e.key === 'Tab') {
             e.preventDefault();
             const start = this.selectionStart;
@@ -443,13 +479,12 @@
             return;
         }
 
-        // Automatisches Fortführen von Listen
         if (e.key === 'Enter') {
             const cursorPosition = this.selectionStart;
             const textUpToCursor = this.value.substring(0, cursorPosition);
-            const currentLine = textUpToCursor.split('\n').pop();
+            const currentLine = textUpToCursor.split('
+').pop();
 
-            // Ungeordnete Liste (- oder *)
             const unorderedMatch = currentLine.match(/^(\s*)([-*])\s+(.*)/);
             if (unorderedMatch) {
                 const indent = unorderedMatch[1];
@@ -463,7 +498,8 @@
                     this.setSelectionRange(lineStart, lineStart);
                 } else {
                     e.preventDefault();
-                    const newLine = `\n${indent}${bullet} `;
+                    const newLine = `
+${indent}${bullet} `;
                     this.value = this.value.substring(0, cursorPosition) + newLine + this.value.substring(cursorPosition);
                     this.setSelectionRange(cursorPosition + newLine.length, cursorPosition + newLine.length);
                 }
@@ -471,7 +507,6 @@
                 return;
             }
 
-            // Nummerierte Liste (1., 2., ...)
             const orderedMatch = currentLine.match(/^(\s*)(\d+)\.\s+(.*)/);
             if (orderedMatch) {
                 const indent = orderedMatch[1];
@@ -485,7 +520,8 @@
                     this.setSelectionRange(lineStart, lineStart);
                 } else {
                     e.preventDefault();
-                    const newLine = `\n${indent}${num + 1}. `;
+                    const newLine = `
+${indent}${num + 1}. `;
                     this.value = this.value.substring(0, cursorPosition) + newLine + this.value.substring(cursorPosition);
                     this.setSelectionRange(cursorPosition + newLine.length, cursorPosition + newLine.length);
                 }
