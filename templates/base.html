@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Warrior Cats{% endblock %}</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    {% block head %}{% endblock %}
+
+    <style>
+        /* ==========================================================================
+           WARRIOR CATS THEME & DESIGN SYSTEM
+           ========================================================================== */
+
+        :root {
+            /* Hintergründe */
+            --bg-dark: #0f1412;
+            --bg-card: #18221e;
+            --bg-card-hover: #1f2d28;
+            --bg-glass: rgba(24, 34, 30, 0.85);
+            
+            /* Akzentfarben */
+            --accent-gold: #e5a93c;
+            --accent-fire: #d96b27;
+            
+            /* Clan-Farben */
+            --thunderclan: #e67e22;
+            --shadowclan: #8e44ad;
+            --riverclan: #2980b9;
+            --windclan: #27ae60;
+            --starclan: #f1c40f;
+
+            /* Textfarben */
+            --text-main: #e2e8e5;
+            --text-muted: #9ab0a6;
+            --text-light: #ffffff;
+            
+            /* Rahmung & Effekte */
+            --border-subtle: rgba(229, 169, 60, 0.15);
+            --border-highlight: rgba(229, 169, 60, 0.4);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 20px rgba(229, 169, 60, 0.15);
+        }
+
+        /* Reset & Base */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(30, 50, 40, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(20, 35, 45, 0.4) 0%, transparent 40%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Typografie */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cinzel', serif;
+            color: var(--text-light);
+            letter-spacing: 0.5px;
+        }
+
+        a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--text-light);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #2a3a33; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-gold); }
+
+        /* Navigation Layout */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        .brand-logo i { color: var(--accent-gold); }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-gold);
+            background: rgba(229, 169, 60, 0.08);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        /* Wiederverwendbare UI-Komponenten */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--border-highlight);
+            box-shadow: var(--shadow-glow), var(--shadow-card);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.6rem 1.2rem;
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--accent-gold);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-fire) 0%, var(--accent-gold) 100%);
+            color: #0f1412;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(229, 169, 60, 0.3);
+        }
+
+        /* Clan Badges */
+        .clan-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        /* ==========================================================================
+           GRID LAYOUT
+           ========================================================================== */
+
+        .grid-container {
+            display: grid;
+            /* Erstellt ein automatisches Responsive-Grid: 
+               Elemente sind mind. 250px breit und füllen den Platz gleichmäßig aus */
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Optional: Spezielle Grid-Karten-Anpassung, falls nötig */
+        .grid-container > .card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .badge-thunder { background: rgba(230, 126, 34, 0.2); color: var(--thunderclan); border: 1px solid var(--thunderclan); }
+        .badge-shadow { background: rgba(142, 68, 173, 0.2); color: var(--shadowclan); border: 1px solid var(--shadowclan); }
+        .badge-river { background: rgba(41, 128, 185, 0.2); color: var(--riverclan); border: 1px solid var(--riverclan); }
+        .badge-wind { background: rgba(39, 174, 96, 0.2); color: var(--windclan); border: 1px solid var(--windclan); }
+
+        /* Flash Messages */
+        .flash-card {
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1rem;
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(10, 14, 12, 0.95);
+            border-top: 1px solid var(--border-subtle);
+            padding: 1.5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    {% block header %}
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="brand-logo">
+                <i class="fa-solid fa-paw"></i>
+                {% block brand %}Warrior Cats{% endblock %}
+            </a>
+            <ul class="nav-links">
+                {% block nav_items %}
+                <li><a href="/" class="nav-link">Home</a></li>
+                {% if current_user %}
+                    {% if current_user.role == 'admin' %}
+                        <li><a href="{{ url_for('editor') }}" class="nav-link">Editor</a></li>
+                        <li><a href="{{ url_for('admin_books') }}" class="nav-link">Buch hinzufügen</a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('logout') }}" class="nav-link"><i class="fa-solid fa-right-from-bracket"></i> {{ current_user.email }}</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}" class="nav-link">Anmelden</a></li>
+                    <li><a href="{{ url_for('register') }}" class="nav-link">Registrieren</a></li>
+                {% endif %}
+                {% endblock %}
+            </ul>
+        </div>
+    </nav>
+    {% endblock %}
+
+    <!-- Flash Messages (Flask) -->
+    <div class="main-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-card {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Hauptinhalt der jeweiligen Unterseite -->
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    {% block footer %}
+    <footer class="footer">
+        <p>&copy; {% block footer_text %}°｡🎀𝓦𝓪𝓻𝓻𝓲𝓸𝓻𝓒𝓪𝓽𝓼⋆.🐚₊˚༄  by Sonnenfrost{% endblock %}</p>
+    </footer>
+    {% endblock %}
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

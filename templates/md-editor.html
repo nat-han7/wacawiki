@@ -1,0 +1,498 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title or "Artikel erstellen" }}{% endblock %}
+
+{% block head %}
+<!-- Marked.js für Markdown Parsing -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<!-- DOMPurify für Schutz gegen XSS-Angriffe -->
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+
+<style>
+    .editor-container {
+        max-width: 1400px;
+        margin: 1.5rem auto 3rem auto;
+        padding: 0 1rem;
+    }
+
+    /* Split-Screen Grid Layout */
+    .editor-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        align-items: start;
+    }
+
+    /* Container Boxen */
+    .editor-box, .preview-box {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-card);
+        padding: 2rem;
+        min-height: 600px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .editor-header {
+        font-family: 'Cinzel', serif;
+        font-size: 1.2rem;
+        color: var(--accent-gold);
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border-subtle);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Input & Textarea Styling */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .title-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+        color: var(--text-light);
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        outline: none;
+    }
+
+    .title-input:focus {
+        border-color: var(--accent-gold);
+    }
+
+    /* Snippet Toolbar Styling */
+    .editor-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 0.5rem;
+        border: 1px solid var(--border-subtle);
+        border-bottom: none;
+        border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    }
+
+    .toolbar-btn {
+        background: transparent;
+        border: 1px solid transparent;
+        color: var(--text-main);
+        padding: 0.35rem 0.6rem;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: background 0.2s, border-color 0.2s;
+    }
+
+    .toolbar-btn:hover {
+        background: rgba(229, 169, 60, 0.15);
+        border-color: var(--accent-gold);
+        color: var(--accent-gold);
+    }
+
+    .markdown-textarea {
+        width: 100%;
+        flex-grow: 1;
+        min-height: 450px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--border-subtle);
+        border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+        color: var(--text-main);
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 0.95rem;
+        padding: 1rem;
+        resize: vertical;
+        outline: none;
+        line-height: 1.5;
+    }
+
+    .markdown-textarea:focus {
+        border-color: var(--accent-gold);
+    }
+
+    /* Wiki Style Preview */
+    .wiki-content {
+        color: var(--text-main);
+        font-size: 1.05rem;
+        line-height: 1.8;
+        word-break: break-word;
+    }
+
+    .wiki-content h1 {
+        font-size: 2.2rem;
+        color: var(--accent-gold);
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .wiki-content h2 {
+        font-size: 1.6rem;
+        color: var(--text-light);
+        margin-top: 2rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .wiki-content h3 {
+        font-size: 1.25rem;
+        color: var(--accent-gold);
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .wiki-content p { margin-bottom: 1.25rem; }
+    .wiki-content strong { color: var(--text-light); font-weight: 600; }
+    .wiki-content ul, .wiki-content ol { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+    .wiki-content li { margin-bottom: 0.5rem; }
+    .wiki-content li::marker { color: var(--accent-gold); }
+
+    .wiki-content blockquote {
+        background: rgba(229, 169, 60, 0.05);
+        border-left: 4px solid var(--accent-gold);
+        padding: 1rem 1.25rem;
+        margin: 1.5rem 0;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        font-style: italic;
+        color: var(--text-muted);
+    }
+
+    .wiki-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: var(--radius-sm);
+        margin: 1.5rem 0;
+        border: 1px solid var(--border-subtle);
+    }
+
+    .wiki-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+    }
+
+    .wiki-content th, .wiki-content td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .wiki-content th {
+        background: rgba(229, 169, 60, 0.1);
+        color: var(--accent-gold);
+        font-family: 'Cinzel', serif;
+        font-size: 0.9rem;
+    }
+    
+    .book-select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+        color: var(--text-light);
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        outline: none;
+    }
+
+    .book-select:focus {
+        border-color: var(--accent-gold);
+    }
+
+    .book-select option {
+        background: var(--bg-card);
+        color: var(--text-main);
+    }
+
+    @media (max-width: 900px) {
+        .editor-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="editor-container">
+    <form method="POST" action="{{ url_for('editor') }}">
+        <div class="editor-grid">
+            
+            <!-- Linke Spalte: Editor -->
+            <div class="editor-box">
+                <div class="editor-header">
+                    <span><i class="fa-solid fa-pen-to-square"></i> Editor</span>
+                    <button type="submit" class="btn btn-primary" style="font-size: 0.75rem; padding: 0.4rem 0.9rem;">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Veröffentlichen
+                    </button>
+                </div>
+
+                <!-- 1. Buchauswahl-Dropdown -->
+                <div class="form-group">
+                    <label for="book-select" style="display: block; color: var(--accent-gold); margin-bottom: 0.4rem; font-size: 0.9rem;">
+                        <i class="fa-solid fa-book"></i> Buch verknüpfen:
+                    </label>
+                    {% if available_books %}
+                        <select name="book_id" id="book-select" class="book-select" required>
+                            <option value="" disabled selected>-- Bitte ein Buch auswählen --</option>
+                            {% for book in available_books %}
+                                <option value="{{ book.id }}" data-title="{{ book.title }}">
+                                    ID {{ book.id }}: {{ book.title }} (von {{ book.author }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Keine unlinked Bücher verfügbar. Alle Bücher haben bereits einen Wiki-Eintrag!
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- 2. Artikel-Titel -->
+                <input 
+                    type="text" 
+                    name="title" 
+                    id="title-input" 
+                    class="title-input" 
+                    placeholder="Artikel-Titel eingeben..." 
+                    value="{{ article_title or '' }}" 
+                    required
+                >
+
+                <!-- Snippet Toolbar -->
+                <div class="editor-toolbar">
+                    <button type="button" class="toolbar-btn" onclick="insertSnippet('bold')" title="Fett"><i class="fa-solid fa-bold"></i></button>
+                    <button type="button" class="toolbar-btn" onclick="insertSnippet('italic')" title="Kursiv"><i class="fa-solid fa-italic"></i></button>
+                    <button type="button" class="toolbar-btn" onclick="insertSnippet('h2')" title="Überschrift 2">H2</button>
+                    <button type="button" class="toolbar-btn" onclick="insertSnippet('h3')" title="Überschrift 3">H3</button>
+                    <button type="button" class="toolbar-btn" onclick="insertSnippet('ul')" title="Liste"><i class="fa-solid fa-list-ul"></i></button>
+                    <button type="button" class="toolbar-btn" onclick="insertSnippet('ol')" title="Nummerierte Liste"><i class="fa-solid fa-list-ol"></i></button>
+                    <button type="button" class="toolbar-btn" onclick="insertSnippet('quote')" title="Zitat"><i class="fa-solid fa-quote-right"></i></button>
+                    <button type="button" class="toolbar-btn" onclick="insertSnippet('code')" title="Code-Block"><i class="fa-solid fa-code"></i></button>
+                    <button type="button" class="toolbar-btn" onclick="insertSnippet('link')" title="Link"><i class="fa-solid fa-link"></i></button>
+                    <button type="button" class="toolbar-btn" onclick="insertSnippet('table')" title="Tabelle"><i class="fa-solid fa-table"></i></button>
+                </div>
+
+                <textarea 
+                    name="content_md" 
+                    id="markdown-input" 
+                    class="markdown-textarea" 
+                    placeholder="Schreibe deinen Artikel hier in Markdown..."
+                >{{ raw_markdown or '' }}</textarea>
+            </div>
+
+            <!-- Rechte Spalte: Live-Vorschau -->
+            <div class="preview-box">
+                <div class="editor-header">
+                    <span><i class="fa-solid fa-eye"></i> Live-Vorschau</span>
+                </div>
+                
+                <div class="wiki-content">
+                    <h1 id="preview-title">Titel-Vorschau</h1>
+                    <div id="preview-body"></div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<script>
+    const markdownInput = document.getElementById('markdown-input');
+    const titleInput = document.getElementById('title-input');
+    const bookSelect = document.getElementById('book-select');
+    const previewBody = document.getElementById('preview-body');
+    const previewTitle = document.getElementById('preview-title');
+
+    // Automatisch den Buch-Titel in das Titel-Feld übernehmen, sobald ein Buch gewählt wird
+    if (bookSelect) {
+        bookSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const bookTitle = selectedOption.getAttribute('data-title');
+            if (bookTitle && !titleInput.value.trim()) {
+                titleInput.value = bookTitle;
+                updatePreview();
+            }
+        });
+    }
+
+    function updatePreview() {
+        previewTitle.textContent = titleInput.value.trim() || 'Titel-Vorschau';
+        const rawText = markdownInput.value;
+        const parsedHTML = marked.parse(rawText);
+        previewBody.innerHTML = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(parsedHTML) : parsedHTML;
+    }
+
+    markdownInput.addEventListener('input', updatePreview);
+    titleInput.addEventListener('input', updatePreview);
+    updatePreview();
+    
+    function insertSnippet(type) {
+        const start = markdownInput.selectionStart;
+        const end = markdownInput.selectionEnd;
+        const text = markdownInput.value;
+        const selectedText = text.substring(start, end);
+
+        let replacement = '';
+        let selectionOffsetStart = start;
+        let selectionOffsetEnd = end;
+
+        switch (type) {
+            case 'bold':
+                replacement = `**${selectedText || 'Fetter Text'}**`;
+                selectionOffsetStart += 2;
+                selectionOffsetEnd += selectedText ? 2 : 13;
+                break;
+            case 'italic':
+                replacement = `*${selectedText || 'Kursiver Text'}*`;
+                selectionOffsetStart += 1;
+                selectionOffsetEnd += selectedText ? 1 : 14;
+                break;
+            case 'h2':
+                replacement = `\n## ${selectedText || 'Überschrift 2'}\n`;
+                selectionOffsetStart += 4;
+                selectionOffsetEnd += selectedText ? 4 : 17;
+                break;
+            case 'h3':
+                replacement = `\n### ${selectedText || 'Überschrift 3'}\n`;
+                selectionOffsetStart += 5;
+                selectionOffsetEnd += selectedText ? 5 : 18;
+                break;
+            case 'ul':
+                replacement = `\n- ${selectedText || 'Listenpunkt'}`;
+                selectionOffsetStart += 3;
+                selectionOffsetEnd += selectedText ? 3 : 14;
+                break;
+            case 'ol':
+                replacement = `\n1. ${selectedText || 'Erster Punkt'}`;
+                selectionOffsetStart += 4;
+                selectionOffsetEnd += selectedText ? 4 : 16;
+                break;
+            case 'quote':
+                replacement = `\n> ${selectedText || 'Zitat text'}\n`;
+                selectionOffsetStart += 3;
+                selectionOffsetEnd += selectedText ? 3 : 13;
+                break;
+            case 'code':
+                replacement = `\n\`\`\`javascript\n${selectedText || '// Code hier'}\n\`\`\`\n`;
+                selectionOffsetStart += 15;
+                selectionOffsetEnd += selectedText ? 15 : 27;
+                break;
+            case 'link':
+                replacement = `[${selectedText || 'Link-Text'}](https://example.com)`;
+                selectionOffsetStart += 1;
+                selectionOffsetEnd += selectedText ? 1 : 10;
+                break;
+            case 'table':
+                replacement = `\n| Spalte 1 | Spalte 2 |\n| --- | --- |\n| Wert 1 | Wert 2 |\n`;
+                selectionOffsetStart = start + replacement.length;
+                selectionOffsetEnd = selectionOffsetStart;
+                break;
+        }
+
+        markdownInput.value = text.substring(0, start) + replacement + text.substring(end);
+        markdownInput.focus();
+        markdownInput.setSelectionRange(selectionOffsetStart, selectionOffsetEnd);
+
+        updatePreview();
+    }
+
+    
+    /* ==========================================
+       2. Tastenkürzel & Autovervollständigung
+       ========================================== */
+    markdownInput.addEventListener('keydown', function(e) {
+        // Strg+B / Cmd+B (Fett)
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+            e.preventDefault();
+            insertSnippet('bold');
+            return;
+        }
+
+        // Strg+I / Cmd+I (Kursiv)
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'i') {
+            e.preventDefault();
+            insertSnippet('italic');
+            return;
+        }
+
+        // Strg+S / Cmd+S Abfangen -> Artikel speichern/veröffentlichen
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+            e.preventDefault();
+            markdownInput.form.requestSubmit();
+            return;
+        }
+
+        // Tab-Taste Unterstützung für Einrückungen
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+            this.setSelectionRange(start + 4, start + 4);
+            updatePreview();
+            return;
+        }
+
+        // Automatisches Fortführen von Listen
+        if (e.key === 'Enter') {
+            const cursorPosition = this.selectionStart;
+            const textUpToCursor = this.value.substring(0, cursorPosition);
+            const currentLine = textUpToCursor.split('\n').pop();
+
+            // Ungeordnete Liste (- oder *)
+            const unorderedMatch = currentLine.match(/^(\s*)([-*])\s+(.*)/);
+            if (unorderedMatch) {
+                const indent = unorderedMatch[1];
+                const bullet = unorderedMatch[2];
+                const content = unorderedMatch[3];
+
+                if (content.trim() === '') {
+                    e.preventDefault();
+                    const lineStart = cursorPosition - currentLine.length;
+                    this.value = this.value.substring(0, lineStart) + this.value.substring(cursorPosition);
+                    this.setSelectionRange(lineStart, lineStart);
+                } else {
+                    e.preventDefault();
+                    const newLine = `\n${indent}${bullet} `;
+                    this.value = this.value.substring(0, cursorPosition) + newLine + this.value.substring(cursorPosition);
+                    this.setSelectionRange(cursorPosition + newLine.length, cursorPosition + newLine.length);
+                }
+                updatePreview();
+                return;
+            }
+
+            // Nummerierte Liste (1., 2., ...)
+            const orderedMatch = currentLine.match(/^(\s*)(\d+)\.\s+(.*)/);
+            if (orderedMatch) {
+                const indent = orderedMatch[1];
+                const num = parseInt(orderedMatch[2], 10);
+                const content = orderedMatch[3];
+
+                if (content.trim() === '') {
+                    e.preventDefault();
+                    const lineStart = cursorPosition - currentLine.length;
+                    this.value = this.value.substring(0, lineStart) + this.value.substring(cursorPosition);
+                    this.setSelectionRange(lineStart, lineStart);
+                } else {
+                    e.preventDefault();
+                    const newLine = `\n${indent}${num + 1}. `;
+                    this.value = this.value.substring(0, cursorPosition) + newLine + this.value.substring(cursorPosition);
+                    this.setSelectionRange(cursorPosition + newLine.length, cursorPosition + newLine.length);
+                }
+                updatePreview();
+                return;
+            }
+        }
+    });
+</script>
+{% endblock %}

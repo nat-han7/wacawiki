@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block head %}
+<style>
+    /* Spezifische Styles für Wiki-Artikel (UX Optimization) */
+    .article-container {
+        max-width: 860px; /* Optimale Zeilenlänge für gute Lesbarkeit */
+        margin: 1.5rem auto 3rem auto;
+        padding: 2.5rem 3rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-card);
+    }
+
+    /* Zurück-Button / Breadcrumb */
+    .article-nav {
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: var(--accent-gold);
+    }
+
+    /* Formatierung für gerenderten Markdown-Content */
+    .wiki-content {
+        color: var(--text-main);
+        font-size: 1.05rem;
+        line-height: 1.8;
+    }
+
+    /* Überschriften-Hierarchie */
+    .wiki-content h1 {
+        font-size: 2.2rem;
+        color: var(--accent-gold);
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .wiki-content h2 {
+        font-size: 1.6rem;
+        color: var(--text-light);
+        margin-top: 2rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .wiki-content h3 {
+        font-size: 1.25rem;
+        color: var(--accent-gold);
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Absätze und Abstände */
+    .wiki-content p {
+        margin-bottom: 1.25rem;
+    }
+
+    .wiki-content strong {
+        color: var(--text-light);
+        font-weight: 600;
+    }
+
+    /* Listen für Rollen/Eigenschaften */
+    .wiki-content ul, .wiki-content ol {
+        margin-bottom: 1.5rem;
+        padding-left: 1.5rem;
+    }
+
+    .wiki-content li {
+        margin-bottom: 0.5rem;
+    }
+
+    .wiki-content li::marker {
+        color: var(--accent-gold);
+    }
+
+    /* Blockquotes / Zitate & Infoboxen */
+    .wiki-content blockquote {
+        background: rgba(229, 169, 60, 0.05);
+        border-left: 4px solid var(--accent-gold);
+        padding: 1rem 1.25rem;
+        margin: 1.5rem 0;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        font-style: italic;
+        color: var(--text-muted);
+    }
+
+    /* Bilder im Artikel */
+    .wiki-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: var(--radius-sm);
+        margin: 1.5rem 0;
+        border: 1px solid var(--border-subtle);
+    }
+
+    /* Tabellen (z.B. für Stammdaten der Katzen/Clans) */
+    .wiki-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+    }
+
+    .wiki-content th, .wiki-content td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .wiki-content th {
+        background: rgba(229, 169, 60, 0.1);
+        color: var(--accent-gold);
+        font-family: 'Cinzel', serif;
+        font-size: 0.9rem;
+    }
+
+    .wiki-content tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Mobile Anpassung */
+    @media (max-width: 768px) {
+        .article-container {
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .wiki-content h1 {
+            font-size: 1.75rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{%if not error%}
+<article class="article-container">
+    <!-- Breadcrumb Nav -->
+    <nav class="article-nav">
+        <a href="/" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i> Zurück zur Übersicht
+        </a>
+    </nav>
+    <!-- Artikel Content -->
+    <div class="wiki-content">
+        {% markdown %}
+        {{ content_md }}
+        {% endmarkdown %}
+    </div>
+</article>
+{% else %}
+{{ content_md | safe }}
+{% endif%}
+{% endblock %}

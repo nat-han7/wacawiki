@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}°｡🎀𝓦𝓪𝓻𝓻𝓲𝓸𝓻𝓒𝓪𝓽𝓼⋆.🐚₊˚༄{% endblock %}
+
+{% block head %}
+<style>
+    /* Spezifische Hero-Styles für die Startseite */
+    .hero-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 4rem 1.5rem;
+        background: radial-gradient(circle at center, rgba(37, 211, 102, 0.08) 0%, transparent 70%);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        margin-top: 1rem;
+    }
+
+    .milestone-badge {
+        background: rgba(37, 211, 102, 0.15);
+        color: #25D366;
+        border: 1px solid #25D366;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .hero-title {
+        font-size: 2.8rem;
+        color: var(--accent-gold);
+        margin-bottom: 1rem;
+        text-shadow: 0 0 20px rgba(229, 169, 60, 0.2);
+    }
+
+    .hero-text {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        max-width: 650px;
+        margin-bottom: 2rem;
+    }
+
+    /* WhatsApp Button Styles */
+    .btn-whatsapp {
+        background-color: #25D366;
+        color: #ffffff;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        padding: 0.9rem 2rem;
+        border-radius: 50px;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .btn-whatsapp:hover {
+        background-color: #20ba5a;
+        color: #ffffff;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 6px 25px rgba(37, 211, 102, 0.5);
+    }
+
+    .btn-whatsapp i {
+        font-size: 1.4rem;
+    }
+
+    /* Floating Plus-Button Container */
+    .floating-wa-btn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #25D366;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        font-size: 1.6rem;
+        z-index: 999;
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+    }
+
+    .floating-wa-btn i {
+        position: absolute;
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .floating-wa-btn .icon-wa {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+
+    .floating-wa-btn .icon-plus {
+        opacity: 0;
+        transform: scale(0.3) rotate(-90deg);
+    }
+
+    .floating-wa-btn:hover {
+        background-color: #20ba5a;
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(37, 211, 102, 0.6);
+    }
+
+    .floating-wa-btn:hover .icon-wa {
+        opacity: 0;
+        transform: scale(0.3) rotate(90deg);
+    }
+
+    .floating-wa-btn:hover .icon-plus {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Horizontaler Hero-bereich -->
+<section class="card hero-section">
+    <h1 class="hero-title">Tritt dem WhatsApp-Kanal bei</h1>
+    
+    <p class="hero-text">
+        ₊‧.°ᗯᗴᒪᑕOᗰᗴ•˚₊!!🥹💞
+» ᵇᵒʳⁿ ᵗᵒ ᵈⁱᵉᵉᵉ ,´-
+• - - • ᯽ • - - • ᯽ • - - •
+⁺₊⋆𝐀𝐡𝐡 𝐝𝐮 ᗯᗴᒪTՏᑕᕼÖᑎᕼᗴIT, 𝐰𝐚𝐬 𝐟𝐮̈𝐡𝐫𝐭 𝐝𝐢𝐜𝐡 𝐳𝐮 𝐦𝐢𝐫 ??‧.💕💭
+ᵉᵍᵃˡ ᵒᵇ ᵈᵘ ᵉⁱⁿ|𝐊𝐫𝐢𝐞𝐠𝐞𝐫🫶, ʰᵉⁱˡᵉʳ👑, 𝙹𝚞𝚗𝚐𝚎𝚜, ᴀ̈ʟᴛᴇsᴛᴇʀ, ˢᵗʳᵉᵘⁿᵉʳ/₊‧⋆. ᕼᗩᑌՏKᗩ̈Tᘔᑕᕼᗴᑎ, ᵏᵒⁿⁱᵍⁱⁿ•˚₊, ᵃⁿᶠᵘʰʳᵉʳ, ❣️︎𝘻𝘸𝘦𝘪𝘵𝘦𝘳 ᵃⁿᶠⁱ☀️, ᵒᵈᵃ ᵉⁱᶠ ⁿᵘʳ ᵉⁱⁿ‧.°🫧ᗯᗩᑕᗩ☀️︎︎ᶠᵃⁿ ᵇⁱˢᵗ:
+˚₊‧ «𝗗𝗨 𝗕𝗜𝗦𝗧 𝗛𝗜𝗘𝗥 𝗛𝗘𝗥𝗭𝗟𝗜𝗖𝗛 𝗪𝗜𝗟𝗞𝗢𝗠𝗠𝗘𝗡»⁺₊🫰💞<a style="color: green;" href="https://whatsapp.com/channel/0029Vb5kWJuICVfiAASGZt1M" target="_blank"><strong>Mehr lesen</strong></a>
+    </p>
+
+    <!-- WhatsApp Channel Link -->
+    <a href="https://whatsapp.com/channel/0029Vb5kWJuICVfiAASGZt1M" target="_blank" class="btn-whatsapp">
+        <i class="fa-brands fa-whatsapp"></i>
+        Jetzt Kanal abonnieren
+    </a>
+</section>
+
+<!-- Bücher Grid mit Skeletons als initiale Lade-Platzhalter -->
+<div id="books" class="grid-container">
+    <waca-book skeleton></waca-book>
+    <waca-book skeleton></waca-book>
+    <waca-book skeleton></waca-book>
+    <waca-book skeleton></waca-book>
+    <waca-book skeleton></waca-book>
+    <waca-book skeleton></waca-book>
+</div>
+
+<!-- Floating Plus/WhatsApp Button -->
+<a href="https://whatsapp.com/channel/0029Vb5kWJuICVfiAASGZt1M" target="_blank" class="floating-wa-btn" title="WhatsApp-Kanal beitreten">
+    <i class="fa-brands fa-whatsapp icon-wa"></i>
+    <i class="fa-solid fa-plus icon-plus"></i>
+</a>
+{% endblock %}
+
+{% block scripts %}
+<!-- Custom Web Component Skript laden -->
+<script src="{{ url_for('static', filename='js/book.js') }}"></script>
+
+<!-- API-Daten abrufen und Skeleton ersetzen -->
+<script>
+    const booksContainer = document.getElementById('books');
+
+    fetch("{{ url_for('api_books') }}")
+        .then(response => response.json())
+        .then(data => {
+            // Skeletons leeren, wenn Daten vorhanden sind
+            booksContainer.innerHTML = '';
+
+            for (const item of data) {
+                // 1. Platzhalter-URL von Jinja erzeugen lassen: "/wiki/0"
+                const urlTemplate = "{{ url_for('wiki_article', id=0) }}";
+
+                // 2. Im Loop den Platzhalter "0" durch die echte JS-ID ersetzen:
+                let href = urlTemplate.replace("0", item.id);
+
+                const book = document.createElement("waca-book");
+                book.setAttribute("thumbnail", item.thumbnail_url || "");
+                book.setAttribute("title", item.title || "");
+                book.setAttribute("author", item.author || "");
+                book.setAttribute("href", href);
+
+                booksContainer.appendChild(book);
+            }
+        })
+        .catch(error => {
+            console.error("Fehler beim Laden der Bücher:", error);
+        });
+</script>
+{% endblock %}
