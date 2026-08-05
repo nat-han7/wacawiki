@@ -1,0 +1,151 @@
+<!-- templates/auth_email.html -->
+{% extends "base.html" %}
+
+{% block title %}E-Mail Bestätigung{% endblock %}
+
+<!-- Navbar durch einen leeren Block überschreiben, um sie auszublenden -->
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<style>
+    .auth-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 80vh;
+        padding: 20px;
+    }
+    .card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 40px 30px;
+        max-width: 440px;
+        width: 100%;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
+    .icon-container {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+    }
+    .icon-success {
+        background-color: #e6f4ea;
+        color: #137333;
+    }
+    .icon-error {
+        background-color: #fce8e6;
+        color: #c5221f;
+    }
+    h1 {
+        font-size: 22px;
+        color: #1f2937;
+        margin-bottom: 10px;
+    }
+    p {
+        font-size: 15px;
+        color: #4b5563;
+        line-height: 1.5;
+        margin-bottom: 24px;
+    }
+    .redirect-info {
+        font-size: 13px;
+        color: #6b7280;
+    }
+    .btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        background-color: #2563eb;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 14px;
+        transition: background 0.2s;
+    }
+    .btn:hover {
+        background-color: #1d4ed8;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="card" id="status-card">
+        <!-- Erfolgs-Zustand -->
+        <div id="success-state">
+            <div class="icon-container icon-success">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h1>E-Mail erfolgreich bestätigt!</h1>
+            <p>Vielen Dank. Dein Konto ist jetzt aktiv und du kannst dich anmelden.</p>
+            <p class="redirect-info">Du wirst in <span id="countdown">5</span> Sekunden weitergeleitet...</p>
+            <a href="{{ url_for('login') }}" class="btn">Jetzt zum Login</a>
+        </div>
+
+        <!-- Fehler-Zustand -->
+        <div id="error-state" style="display: none;">
+            <div class="icon-container icon-error">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+            <h1 id="error-title">Link ungültig oder abgelaufen</h1>
+            <p id="error-message">Der Bestätigungslink ist abgelaufen oder wurde bereits verwendet.</p>
+            <p class="redirect-info">Weiterleitung zum Login in <span id="error-countdown">8</span> Sekunden...</p>
+            <a href="{{ url_for('login') }}" class="btn">Zurück zum Login</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const loginUrl = "{{ url_for('login') }}";
+
+    function parseHashParams() {
+        const hash = window.location.hash.substring(1);
+        const params = {};
+        hash.split('&').forEach(part => {
+            const [key, value] = part.split('=');
+            if (key) params[key] = decodeURIComponent(value || '');
+        });
+        return params;
+    }
+
+    function startRedirect(seconds, elementId) {
+        let count = seconds;
+        const countdownEl = document.getElementById(elementId);
+        
+        const interval = setInterval(() => {
+            count--;
+            if (countdownEl) countdownEl.textContent = count;
+            if (count <= 0) {
+                clearInterval(interval);
+                window.location.href = loginUrl;
+            }
+        }, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const hashParams = parseHashParams();
+
+        if (hashParams.error || hashParams.error_code) {
+            document.getElementById('success-state').style.display = 'none';
+            document.getElementById('error-state').style.display = 'block';
+
+            if (hashParams.error_description) {
+                document.getElementById('error-message').textContent = hashParams.error_description.replace(/\+/g, ' ');
+            }
+
+            startRedirect(8, 'error-countdown');
+        } else {
+            startRedirect(5, 'countdown');
+        }
+    });
+</script>
+{% endblock %}

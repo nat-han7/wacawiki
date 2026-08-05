@@ -111,6 +111,10 @@ def ping():
 # AUTH ROUTES
 # ==========================================================================
 
+@app.route("/auth/confirmation")
+def auth_confirmation():
+    return render_template("auth_email.html")
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if current_user():
