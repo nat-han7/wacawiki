@@ -3,3 +3,4 @@ supabase
 python-dotenv
 jinja-markdown2
 markdown2
+gunicorn
