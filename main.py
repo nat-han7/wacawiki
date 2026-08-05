@@ -103,6 +103,9 @@ def slugify(text: str) -> str:
     text = re.sub(r"[^a-z0-9]+", "-", text)
     return text.strip("-") or str(uuid.uuid4())[:8]
 
+@app.route('/ping')
+def ping():
+    return {'WacaWikiWakey': True, 'success': True, 'status': 'success'}
 
 # ==========================================================================
 # AUTH ROUTES
