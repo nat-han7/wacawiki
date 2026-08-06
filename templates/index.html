@@ -140,30 +140,231 @@
             height: 50px;
             font-size: 1.3rem;
         }
+
+        .mini-hero {
+            padding: 1.4rem 1.2rem;
+        }
+
+        .mini-hero-title {
+            font-size: 1.3rem;
+        }
+    }
+
+    /* ============== WhatsApp Modal (nur beim ersten Besuch) ============== */
+    .wa-modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(6, 10, 8, 0.72);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+    }
+
+    .wa-modal-overlay.active {
+        display: flex;
+        animation: waModalFadeIn 0.25s ease;
+    }
+
+    @keyframes waModalFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .wa-modal-card {
+        position: relative;
+        max-width: 480px;
+        width: 100%;
+        text-align: center;
+        animation: waModalPop 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes waModalPop {
+        from { opacity: 0; transform: translateY(12px) scale(0.97); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .wa-modal-close {
+        position: absolute;
+        top: -14px;
+        right: -14px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--bg-card);
+        border: 1px solid var(--border-highlight);
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        touch-action: manipulation;
+    }
+
+    .wa-modal-close:hover {
+        background: var(--accent-gold);
+        color: #0f1412;
+    }
+
+    .wa-modal-card .hero-section {
+        margin-top: 0;
+    }
+
+    /* ============== Kompakter Hero-Banner ============== */
+    .mini-hero {
+        margin-top: 0.5rem;
+        padding: 1.8rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        background: radial-gradient(circle at 15% 30%, rgba(229, 169, 60, 0.08) 0%, transparent 60%);
+    }
+
+    .mini-hero-text {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    .mini-hero-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Cinzel', serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--accent-gold);
+        margin-bottom: 0.5rem;
+    }
+
+    .mini-hero-title {
+        font-size: 1.55rem;
+        color: var(--text-light);
+        margin-bottom: 0.4rem;
+        line-height: 1.25;
+    }
+
+    .mini-hero-subtitle {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .mini-hero .btn-whatsapp {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.92rem;
+        flex-shrink: 0;
+    }
+
+    /* ============== Suchleiste ============== */
+    .search-bar-wrap {
+        margin-top: 1.5rem;
+        position: relative;
+    }
+
+    .search-bar-wrap i.fa-magnifying-glass {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        pointer-events: none;
+    }
+
+    #bookSearchInput {
+        width: 100%;
+        padding: 0.85rem 1rem 0.85rem 2.7rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+        color: var(--text-light);
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        min-height: 48px;
+    }
+
+    #bookSearchInput:focus {
+        border-color: var(--accent-gold);
+        box-shadow: var(--shadow-glow);
+    }
+
+    #bookSearchInput::placeholder {
+        color: var(--text-muted);
+    }
+
+    .search-empty-state {
+        display: none;
+        text-align: center;
+        padding: 2.5rem 1rem;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+    .search-empty-state i {
+        display: block;
+        font-size: 1.8rem;
+        color: var(--border-highlight);
+        margin-bottom: 0.7rem;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Horizontaler Hero-bereich -->
-<section class="card hero-section">
-    <h1 class="hero-title">Tritt dem WhatsApp-Kanal bei</h1>
-    
-    <p class="hero-text">
-        ₊‧.°ᗯᗴᒪᑕOᗰᗴ•˚₊!!🥹💞
+<!-- WhatsApp Modal: erscheint nur beim allerersten Besuch -->
+<div class="wa-modal-overlay" id="waModalOverlay">
+    <div class="wa-modal-card">
+        <button type="button" class="wa-modal-close" id="waModalClose" aria-label="Schließen">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <section class="card hero-section">
+            <h1 class="hero-title">Tritt dem WhatsApp-Kanal bei</h1>
+
+            <p class="hero-text">
+                ₊‧.°ᗯᗴᒪᑕOᗰᗴ•˚₊!!🥹💞
 » ᵇᵒʳⁿ ᵗᵒ ᵈⁱᵉᵉᵉ ,´-
 • - - • ᯽ • - - • ᯽ • - - •
 ⁺₊⋆𝐀𝐡𝐡 𝐝𝐮 ᗯᗴᒪTՏᑕᕼÖᑎᕼᗴIT, 𝐰𝐚𝐬 𝐟𝐮̈𝐡𝐫𝐭 𝐝𝐢𝐜𝐡 𝐳𝐮 𝐦𝐢𝐫 ??‧.💕💭
 ᵉᵍᵃˡ ᵒᵇ ᵈᵘ ᵉⁱⁿ|𝐊𝐫𝐢𝐞𝐠𝐞𝐫🫶, ʰᵉⁱˡᵉʳ👑, 𝙹𝚞𝚗𝚐𝚎𝚜, ᴀ̈ʟᴛᴇsᴛᴇʀ, ˢᵗʳᵉᵘⁿᵉʳ/₊‧⋆. ᕼᗩᑌՏKᗩ̈Tᘔᑕᕼᗴᑎ, ᵏᵒⁿⁱᵍⁱⁿ•˚₊, ᵃⁿᶠᵘʰʳᵉʳ, ❣️︎𝘻𝘸𝘦𝘪𝘵𝘦𝘳 ᵃⁿᶠⁱ☀️, ᵒᵈᵃ ᵉⁱᶠ ⁿᵘʳ ᵉⁱⁿ‧.°🫧ᗯᗩᑕᗩ☀️︎︎ᶠᵃⁿ ᵇⁱˢᵗ:
 ˚₊‧ «𝗗𝗨 𝗕𝗜𝗦𝗧 𝗛𝗜𝗘𝗥 𝗛𝗘𝗥𝗭𝗟𝗜𝗖𝗛 𝗪𝗜𝗟𝗞𝗢𝗠𝗠𝗘𝗡»⁺₊🫰💞<a style="color: #25D366; font-weight: bold;" href="https://whatsapp.com/channel/0029Vb5kWJuICVfiAASGZt1M" target="_blank"><strong>Mehr lesen</strong></a>
-    </p>
+            </p>
 
-    <!-- WhatsApp Channel Link -->
+            <!-- WhatsApp Channel Link -->
+            <a href="https://whatsapp.com/channel/0029Vb5kWJuICVfiAASGZt1M" target="_blank" class="btn-whatsapp" id="waModalSubscribeBtn">
+                <i class="fa-brands fa-whatsapp"></i>
+                Jetzt Kanal abonnieren
+            </a>
+        </section>
+    </div>
+</div>
+
+<!-- Kompakter Hero-Banner -->
+<section class="card mini-hero">
+    <div class="mini-hero-text">
+        <div class="mini-hero-eyebrow"><i class="fa-solid fa-paw"></i> Willkommen bei WacaWiki</div>
+        <h2 class="mini-hero-title">Warrior Cats by Sonnenfrost</h2>
+        <p class="mini-hero-subtitle">Tägliche Nachrichten, Edits und Abstimmungen <3</p>
+    </div>
     <a href="https://whatsapp.com/channel/0029Vb5kWJuICVfiAASGZt1M" target="_blank" class="btn-whatsapp">
         <i class="fa-brands fa-whatsapp"></i>
-        Jetzt Kanal abonnieren
+        Kanal beitreten
     </a>
 </section>
+
+<!-- Suchleiste -->
+<div class="search-bar-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" id="bookSearchInput" placeholder="Buch oder Autor suchen..." autocomplete="off">
+</div>
 
 <!-- Bücher Grid mit Skeletons als initiale Lade-Platzhalter -->
 <div id="books" class="grid-container">
@@ -173,6 +374,12 @@
     <waca-book skeleton></waca-book>
     <waca-book skeleton></waca-book>
     <waca-book skeleton></waca-book>
+</div>
+
+<!-- Empty State bei erfolgloser Suche -->
+<div class="search-empty-state" id="searchEmptyState">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    Keine Bücher gefunden.
 </div>
 
 <!-- Floating Plus/WhatsApp Button -->
@@ -186,34 +393,115 @@
 <!-- Custom Web Component Skript laden -->
 <script src="{{ url_for('static', filename='js/book.js') }}"></script>
 
-<!-- API-Daten abrufen und Skeleton ersetzen -->
+<!-- WhatsApp-Kanal Modal: nur beim ersten Besuch anzeigen -->
+<script>
+    (function () {
+        const STORAGE_KEY = 'waca_channel_modal_seen';
+        const overlay = document.getElementById('waModalOverlay');
+        const closeBtn = document.getElementById('waModalClose');
+        const subscribeBtn = document.getElementById('waModalSubscribeBtn');
+
+        if (!overlay) return;
+
+        function closeModal() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            try {
+                localStorage.setItem(STORAGE_KEY, '1');
+            } catch (e) {
+                // localStorage nicht verfügbar (z.B. Private Mode) -> Modal zeigt sich ggf. erneut
+            }
+        }
+
+        let hasSeenModal = false;
+        try {
+            hasSeenModal = localStorage.getItem(STORAGE_KEY) === '1';
+        } catch (e) {
+            hasSeenModal = false;
+        }
+
+        if (!hasSeenModal) {
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        subscribeBtn.addEventListener('click', closeModal);
+
+        // Schließen bei Klick auf den dunklen Hintergrund
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeModal();
+        });
+
+        // Schließen mit ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    })();
+</script>
+
+<!-- API-Daten abrufen, Skeleton ersetzen und Suche aktivieren -->
 <script>
     const booksContainer = document.getElementById('books');
+    const searchInput = document.getElementById('bookSearchInput');
+    const emptyState = document.getElementById('searchEmptyState');
+    let allBooks = [];
+
+    function renderBooks(items) {
+        booksContainer.innerHTML = '';
+
+        if (items.length === 0) {
+            emptyState.style.display = 'block';
+            return;
+        }
+        emptyState.style.display = 'none';
+
+        for (const item of items) {
+            // 1. Platzhalter-URL von Jinja erzeugen lassen: "/wiki/0"
+            const urlTemplate = "{{ url_for('wiki_article', id=0) }}";
+
+            // 2. Im Loop den Platzhalter "0" durch die echte JS-ID ersetzen:
+            let href = urlTemplate.replace("0", item.id);
+
+            const book = document.createElement("waca-book");
+            book.setAttribute("thumbnail", item.thumbnail_url || "");
+            book.setAttribute("title", item.title || "");
+            book.setAttribute("author", item.author || "");
+            book.setAttribute("href", href);
+
+            booksContainer.appendChild(book);
+        }
+    }
 
     fetch("{{ url_for('api_books') }}")
         .then(response => response.json())
         .then(data => {
-            // Skeletons leeren, wenn Daten vorhanden sind
-            booksContainer.innerHTML = '';
-
-            for (const item of data) {
-                // 1. Platzhalter-URL von Jinja erzeugen lassen: "/wiki/0"
-                const urlTemplate = "{{ url_for('wiki_article', id=0) }}";
-
-                // 2. Im Loop den Platzhalter "0" durch die echte JS-ID ersetzen:
-                let href = urlTemplate.replace("0", item.id);
-
-                const book = document.createElement("waca-book");
-                book.setAttribute("thumbnail", item.thumbnail_url || "");
-                book.setAttribute("title", item.title || "");
-                book.setAttribute("author", item.author || "");
-                book.setAttribute("href", href);
-
-                booksContainer.appendChild(book);
-            }
+            allBooks = data;
+            renderBooks(allBooks);
         })
         .catch(error => {
             console.error("Fehler beim Laden der Bücher:", error);
         });
+
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.trim().toLowerCase();
+
+            if (!query) {
+                renderBooks(allBooks);
+                return;
+            }
+
+            const filtered = allBooks.filter(item => {
+                const title = (item.title || '').toLowerCase();
+                const author = (item.author || '').toLowerCase();
+                return title.includes(query) || author.includes(query);
+            });
+
+            renderBooks(filtered);
+        });
+    }
 </script>
 {% endblock %}
