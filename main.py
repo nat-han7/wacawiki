@@ -26,14 +26,14 @@ if not app.secret_key:
 app.jinja_env.add_extension(MarkdownExtension)
 
 url: str = os.environ.get("SUPABASE_URL")
-service_key: str = os.environ.get("SUPABASE_SERVICE_KEY") or os.environ.get("SUPABASE_KEY")
-anon_key: str = os.environ.get("SUPABASE_ANON_KEY")
+service_key: str = os.environ.get("SUPABASE_SERVICE_KEY")
+anon_key: str = os.environ.get("SUPABASE_KEY")
 
 if not url or not service_key:
     raise ValueError("SUPABASE_URL oder SUPABASE_SERVICE_KEY fehlt in der .env-Datei!")
 
 if not anon_key:
-    raise ValueError("SUPABASE_ANON_KEY fehlt in der .env-Datei! (Wird für Login/Register benötigt)")
+    raise ValueError("SUPABASE_KEY fehlt in der .env-Datei! (Wird für Login/Register benötigt)")
 
 # WICHTIG: Dieser Client wird NIE für .auth.sign_in_with_password() o.ä. benutzt!
 # supabase-py setzt bei Auth-Calls intern den Authorization-Header des Clients
