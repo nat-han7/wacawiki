@@ -26,14 +26,30 @@ if not app.secret_key:
 app.jinja_env.add_extension(MarkdownExtension)
 
 url: str = os.environ.get("SUPABASE_URL")
-key: str = os.environ.get("SUPABASE_SERVICE_KEY") or os.environ.get("SUPABASE_KEY")
+service_key: str = os.environ.get("SUPABASE_SERVICE_KEY") or os.environ.get("SUPABASE_KEY")
+anon_key: str = os.environ.get("SUPABASE_ANON_KEY")
 
-if not url or not key:
-    raise ValueError("SUPABASE_URL oder SUPABASE_KEY fehlt in der .env-Datei!")
+if not url or not service_key:
+    raise ValueError("SUPABASE_URL oder SUPABASE_SERVICE_KEY fehlt in der .env-Datei!")
 
-supabase: Client = create_client(url, key)
+if not anon_key:
+    raise ValueError("SUPABASE_ANON_KEY fehlt in der .env-Datei! (Wird für Login/Register benötigt)")
 
-supabase: Client = create_client(url, key)
+# WICHTIG: Dieser Client wird NIE für .auth.sign_in_with_password() o.ä. benutzt!
+# supabase-py setzt bei Auth-Calls intern den Authorization-Header des Clients
+# auf das User-JWT -- bei einem global geteilten Client würde das dann für ALLE
+# nachfolgenden Requests (auch anderer User) gelten und nach Ablauf des Tokens
+# zu "JWT expired"-Fehlern führen, unabhängig vom eigentlichen Request.
+supabase: Client = create_client(url, service_key)
+
+
+def get_auth_client() -> Client:
+    """Erzeugt einen frischen Client (mit Anon-Key) nur für Login/Register/Logout.
+
+    Wird bewusst NICHT global gecacht, damit das interne User-JWT des
+    supabase-py-Clients niemals mit dem Admin-Client (Service Key) kollidiert.
+    """
+    return create_client(url, anon_key)
 
 # Fallback 404 Markdown mit Inline-HTML
 NOT_FOUND_MARKDOWN = """
@@ -138,7 +154,8 @@ def register():
             return render_template("register.html")
 
         try:
-            result = supabase.auth.sign_up({"email": email, "password": password})
+            auth_client = get_auth_client()
+            result = auth_client.auth.sign_up({"email": email, "password": password})
         except AuthApiError as e:
             flash(f"Registrierung fehlgeschlagen: {e.message}", "error")
             return render_template("register.html")
@@ -167,7 +184,8 @@ def login():
         next_url = request.form.get("next") or url_for("index")
 
         try:
-            result = supabase.auth.sign_in_with_password({"email": email, "password": password})
+            auth_client = get_auth_client()
+            result = auth_client.auth.sign_in_with_password({"email": email, "password": password})
         except AuthApiError:
             flash("E-Mail oder Passwort ist falsch.", "error")
             return render_template("login.html", next=next_url)
@@ -182,10 +200,9 @@ def login():
 
 @app.route("/logout")
 def logout():
-    try:
-        supabase.auth.sign_out()
-    except Exception:
-        pass
+    # Kein supabase.auth.sign_out() mehr nötig: der globale `supabase`-Client
+    # ist der Admin-Client und hält nie eine User-Session. Der Login-Status
+    # läuft ausschließlich über die Flask-Session.
     session.clear()
     flash("Du wurdest abgemeldet.", "success")
     return redirect(url_for("index"))
